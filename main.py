@@ -10,4 +10,4 @@ except KeyboardInterrupt:
     pass
 
 
-benchmark.some_func()
+benchmark.generate_report()

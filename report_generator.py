@@ -59,9 +59,12 @@ def draw_swap_plot(benchmark_entries: list, path_name: string, x):
     twin1 = ax.twinx()
 
     max_swap_allocated = max(y_swap_total)
+    ax.set_ylim(bottom=0)
+    twin1.set_ylim(bottom=0)
+
     if max_swap_allocated > 0:
-        ax.set_ylim(0, max_swap_allocated)
-        twin1.set_ylim(0, max_swap_allocated)
+        ax.set_ylim(top=max_swap_allocated)
+        twin1.set_ylim(top=max_swap_allocated)
 
     p1, = ax.plot(x, y_swap_total, "b-", label="SWAP Allocated")
     p2, = twin1.plot(x, y_swap_used, "r-", label="SWAP Usage")

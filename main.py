@@ -10,8 +10,7 @@ benchmark_entries = list()
 try:
     while True:
         bench_entry = benchmark.collect_usage_data()
-        benchmark_entries.add(bench_entry)
-        print(bench_entry)
+        benchmark_entries.append(bench_entry)
         time.sleep(1)
 except KeyboardInterrupt:
     pass

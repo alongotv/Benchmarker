@@ -1,5 +1,4 @@
-import benchmark
-import report_generator
+from scripts import benchmark, report_generator
 import time
 
 benchmark.system_info()

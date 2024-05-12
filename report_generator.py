@@ -1,8 +1,11 @@
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 
 def generate_report(benchmark_entries: list):
-    # y = range(len(benchmark_entries))
+    if len(benchmark_entries) == 0:
+        print("Nothing to report: no data received")
+        return
     x = [elem.date_time for elem in benchmark_entries]
     y_cpu = [elem.cpu_percentage for elem in benchmark_entries]
     y_ram = [elem.ram_usage.percent for elem in benchmark_entries]
@@ -23,6 +26,11 @@ def generate_report(benchmark_entries: list):
     ax.set_ylabel("Load (in %)")
 
     ax.legend(handles=[p1, p2, p3])
-    fig.savefig('./generated/plot.png')
+
+    report_time = benchmark_entries[0].date_time.replace(microsecond=0).isoformat()
+    directory_name = "Report {0}".format(report_time)
+    Path("./generated/{0}".format(directory_name)).mkdir(parents=True, exist_ok=True)
+
+    fig.savefig('./generated/{0}/plot.png'.format(directory_name))
 
     # for entry in benchmark_entries:

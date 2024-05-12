@@ -1,3 +1,4 @@
+import string
 import matplotlib.pyplot as plt
 from pathlib import Path
 
@@ -6,6 +7,16 @@ def generate_report(benchmark_entries: list):
     if len(benchmark_entries) == 0:
         print("Nothing to report: no data received")
         return
+
+    report_time = benchmark_entries[0].date_time.replace(microsecond=0).isoformat()
+    directory_name = "Report-{0}".format(report_time)
+    path_name = "./generated/{0}".format(directory_name)
+    Path(path_name).mkdir(parents=True, exist_ok=True)
+
+    draw_main_plot(benchmark_entries, path_name)
+
+
+def draw_main_plot(benchmark_entries: list, path_name: string):
     x = [elem.date_time for elem in benchmark_entries]
     y_cpu = [elem.cpu_percentage for elem in benchmark_entries]
     y_ram = [elem.ram_usage.percent for elem in benchmark_entries]
@@ -27,10 +38,4 @@ def generate_report(benchmark_entries: list):
 
     ax.legend(handles=[p1, p2, p3])
 
-    report_time = benchmark_entries[0].date_time.replace(microsecond=0).isoformat()
-    directory_name = "Report {0}".format(report_time)
-    Path("./generated/{0}".format(directory_name)).mkdir(parents=True, exist_ok=True)
-
-    fig.savefig('./generated/{0}/plot.png'.format(directory_name))
-
-    # for entry in benchmark_entries:
+    fig.savefig('{0}/main_plot.png'.format(path_name))

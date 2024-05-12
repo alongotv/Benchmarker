@@ -2,6 +2,7 @@ import string
 import matplotlib.pyplot as plt
 from pathlib import Path
 from sys import getsizeof
+import os
 
 
 def generate_report(benchmark_entries: list):
@@ -17,6 +18,7 @@ def generate_report(benchmark_entries: list):
     Path(path_name).mkdir(parents=True, exist_ok=True)
 
     draw_plots(benchmark_entries, path_name)
+    print("Path to generated report: ", os.path.abspath(path_name))
 
 
 def draw_plots(benchmark_entries: list, path_name: string):
@@ -68,3 +70,6 @@ def draw_swap_plot(benchmark_entries: list, path_name: string, x):
     ax.legend(handles=[p1, p2])
     fig.savefig('{0}/swap_plot.png'.format(path_name))
 
+
+def generate_csv(benchmark_entries: list):
+    benchmark_entries

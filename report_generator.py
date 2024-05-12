@@ -12,6 +12,8 @@ def generate_report(benchmark_entries: list):
     twin1 = ax.twinx()
     twin2 = ax.twinx()
     ax.set_ylim(0, 100)
+    twin1.set_ylim(0, 100)
+    twin2.set_ylim(0, 100)
 
     p1, = ax.plot(x, y_cpu, "b-", label="CPU Load")
     p2, = twin1.plot(x, y_ram, "r-", label="RAM Usage")

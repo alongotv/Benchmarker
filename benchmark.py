@@ -2,7 +2,7 @@ from datetime import datetime
 import psutil
 
 
-def generate_report():
+def system_info():
     print("CPU core count", psutil.cpu_count())
 
 

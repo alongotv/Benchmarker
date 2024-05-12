@@ -2,7 +2,7 @@ Benchmarker - a simple system load reporter
 
 To set up:
 ```console
-pip3 install psutil
+pip3 install psutil matplotlib
 ```
 
 To launch:

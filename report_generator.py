@@ -52,8 +52,8 @@ def draw_main_plot(benchmark_entries: list, path_name: string, x):
 
 
 def draw_swap_plot(benchmark_entries: list, path_name: string, x):
-    y_swap_total = [elem.swap_usage.total for elem in benchmark_entries]
-    y_swap_used = [elem.swap_usage.used for elem in benchmark_entries]
+    y_swap_total = [elem.swap_usage.total / (1 << 20) for elem in benchmark_entries]
+    y_swap_used = [elem.swap_usage.used / (1 << 20) for elem in benchmark_entries]
 
     (fig, ax) = plt.subplots(layout='constrained')
     twin1 = ax.twinx()
@@ -66,10 +66,11 @@ def draw_swap_plot(benchmark_entries: list, path_name: string, x):
         ax.set_ylim(top=max_swap_allocated)
         twin1.set_ylim(top=max_swap_allocated)
 
-    p1, = ax.plot(x, y_swap_total, "b-", label="SWAP Allocated")
-    p2, = twin1.plot(x, y_swap_used, "r-", label="SWAP Usage")
+    p1, = ax.plot(x, y_swap_total, "b-", label="SWAP Allocated (megabytes)")
+    p2, = twin1.plot(x, y_swap_used, "r-", label="SWAP Usage (megabytes)")
+
     ax.set_xlabel("Time")
-    ax.set_ylabel("Memory Usage (in %)")
+    ax.set_ylabel("SWAP Usage (megabytes)")
     ax.tick_params(axis='x', labelrotation=90)
     ax.legend(handles=[p1, p2])
     fig.savefig('{0}/swap_plot.png'.format(path_name))

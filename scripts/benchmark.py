@@ -3,7 +3,9 @@ import psutil
 
 
 def system_info():
-    print("CPU core count", psutil.cpu_count())
+    print("CPU core count:", psutil.cpu_count())
+    print("RAM total capacity (MB):", psutil.virtual_memory().total / (1 << 20))
+    print("Currently allocated swap (MB):", psutil.swap_memory().total / (1 << 20))
 
 
 def collect_usage_data():

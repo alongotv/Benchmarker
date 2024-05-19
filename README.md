@@ -10,4 +10,4 @@ To launch:
 python3 main.py
 ```
 
-To terminate the benchmark:Ctrl+C
+To terminate the benchmark: Ctrl+C

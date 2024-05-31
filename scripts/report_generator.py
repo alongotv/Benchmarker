@@ -18,22 +18,25 @@ def generate_report(benchmark_entries: list):
     path_name = "./generated/{0}".format(directory_name)
     Path(path_name).mkdir(parents=True, exist_ok=True)
 
-    draw_plots(benchmark_entries, path_name)
-    generate_csv(benchmark_entries, path_name)
-    print("Path to generated report: ", os.path.abspath(path_name))
-
-
-def draw_plots(benchmark_entries: list, path_name: string):
     x = [elem.date_time for elem in benchmark_entries]
-    draw_main_plot(benchmark_entries, path_name, x)
-    draw_swap_plot(benchmark_entries, path_name, x)
-
-
-def draw_main_plot(benchmark_entries: list, path_name: string, x):
     y_cpu = [elem.cpu_percentage for elem in benchmark_entries]
     y_ram = [elem.ram_usage.percent for elem in benchmark_entries]
     y_swap = [elem.swap_usage.percent for elem in benchmark_entries]
+    y_swap_total = [elem.swap_usage.total / (1 << 20) for elem in benchmark_entries]
+    y_swap_used = [elem.swap_usage.used / (1 << 20) for elem in benchmark_entries]
 
+    draw_plots(x, y_cpu, y_ram, y_swap, y_swap_total, y_swap_used, path_name)
+    generate_csv(x, y_cpu, y_ram, y_swap, y_swap_total, y_swap_used, path_name)
+
+    print("Path to generated report: ", os.path.abspath(path_name))
+
+
+def draw_plots(x, y_cpu, y_ram, y_swap, y_swap_total, y_swap_used, path_name: string):
+    draw_main_plot(x, y_cpu, y_ram, y_swap, path_name)
+    draw_swap_plot(x, y_swap_total, y_swap_used, path_name)
+
+
+def draw_main_plot(x, y_cpu, y_ram, y_swap, path_name: string):
     (fig, ax) = plt.subplots(layout='constrained')
     twin1 = ax.twinx()
     twin2 = ax.twinx()
@@ -53,10 +56,7 @@ def draw_main_plot(benchmark_entries: list, path_name: string, x):
     fig.savefig('{0}/main_plot.png'.format(path_name))
 
 
-def draw_swap_plot(benchmark_entries: list, path_name: string, x):
-    y_swap_total = [elem.swap_usage.total / (1 << 20) for elem in benchmark_entries]
-    y_swap_used = [elem.swap_usage.used / (1 << 20) for elem in benchmark_entries]
-
+def draw_swap_plot(x, y_swap_total, y_swap_used, path_name):
     (fig, ax) = plt.subplots(layout='constrained')
     twin1 = ax.twinx()
 
@@ -78,17 +78,10 @@ def draw_swap_plot(benchmark_entries: list, path_name: string, x):
     fig.savefig('{0}/swap_plot.png'.format(path_name))
 
 
-def generate_csv(benchmark_entries: list, path_name: string):
+def generate_csv(x, y_cpu, y_ram, y_swap, y_swap_total, y_swap_used, path_name: string):
     headers = ['time', 'cpu_usage_percentage', 'ram_used_percentage', 'swap_used_percentage', 'swap_allocated',
-              'swap_used']
+               'swap_used']
     file_name = '{0}/benchmark_logs.csv'.format(path_name)
-
-    y_cpu = [elem.cpu_percentage for elem in benchmark_entries]
-    y_ram = [elem.ram_usage.percent for elem in benchmark_entries]
-    y_swap = [elem.swap_usage.percent for elem in benchmark_entries]
-    y_swap_total = [elem.swap_usage.total / (1 << 20) for elem in benchmark_entries]
-    y_swap_used = [elem.swap_usage.used / (1 << 20) for elem in benchmark_entries]
-    x = [elem.date_time for elem in benchmark_entries]
 
     arr = [x, y_cpu, y_ram, y_swap, y_swap_total, y_swap_used]
 

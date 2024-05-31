@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from sys import getsizeof
 import os
+import csv
 
 
 def generate_report(benchmark_entries: list):
@@ -18,6 +19,7 @@ def generate_report(benchmark_entries: list):
     Path(path_name).mkdir(parents=True, exist_ok=True)
 
     draw_plots(benchmark_entries, path_name)
+    generate_csv(benchmark_entries, path_name)
     print("Path to generated report: ", os.path.abspath(path_name))
 
 
@@ -76,5 +78,24 @@ def draw_swap_plot(benchmark_entries: list, path_name: string, x):
     fig.savefig('{0}/swap_plot.png'.format(path_name))
 
 
-def generate_csv(benchmark_entries: list):
-    benchmark_entries
+def generate_csv(benchmark_entries: list, path_name: string):
+    headers = ['time', 'cpu_usage_percentage', 'ram_used_percentage', 'swap_used_percentage', 'swap_allocated',
+              'swap_used']
+    file_name = '{0}/benchmark_logs.csv'.format(path_name)
+
+    y_cpu = [elem.cpu_percentage for elem in benchmark_entries]
+    y_ram = [elem.ram_usage.percent for elem in benchmark_entries]
+    y_swap = [elem.swap_usage.percent for elem in benchmark_entries]
+    y_swap_total = [elem.swap_usage.total / (1 << 20) for elem in benchmark_entries]
+    y_swap_used = [elem.swap_usage.used / (1 << 20) for elem in benchmark_entries]
+    x = [elem.date_time for elem in benchmark_entries]
+
+    arr = [x, y_cpu, y_ram, y_swap, y_swap_total, y_swap_used]
+
+    # Rotate the matrix by 90 degrees
+    arr_rotated = [[arr[j][i] for j in range(len(arr))] for i in range(len(arr[0]) - 1, -1, -1)]
+
+    with open(file_name, 'w') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(headers)
+        writer.writerows(arr_rotated)
